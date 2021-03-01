@@ -10,6 +10,10 @@ import { catchError, map, tap } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class HeroService {
+  httpOptions = {
+    headers: new HttpHeaders({ 'Content-type': 'application/json' }),
+  };
+
   getHeroes(): Observable<Hero[]> {
     const heroes = of(HEROES);
     // this.messageService.add('HeroService: fetched hero!');
@@ -29,6 +33,15 @@ export class HeroService {
       catchError(this.handleError<Hero>(`getHero id=${id}`))
     );
   }
+
+  // サーバ上でHeroデータを更新
+  updateHero(hero: Hero): Observable<any> {
+    return this.http.put(this.heroesUrl, hero, this.httpOptions).pipe(
+      tap((_) => this.log(`updated hero id=${hero.id}`)),
+      catchError(this.handleError<any>('updateHero'))
+    );
+  }
+
   constructor(
     private http: HttpClient,
     private messageService: MessageService
