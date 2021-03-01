@@ -32,4 +32,14 @@ export class HeroesComponent implements OnInit {
     this.selectedHero = hero;
     this.messageService.add(`HeroesComponent: selected hero id=${hero.id}`);
   }
+
+  add(name: string): void {
+    name = name.trim();
+    if (!name) {
+      return;
+    }
+    this.heroService.addHero({ name } as Hero).subscribe((hero) => {
+      this.heroes.push(hero);
+    });
+  }
 }
